@@ -18,12 +18,12 @@ class FeedItemGuid
      * Constructor.
      *
      * @param string $link
-     * @param bool $isPermaLink
+     * @param boolean $isPermaLink
      */
     public function __construct($link, $isPermaLink = true)
     {
         $this->setLink($link);
-        $this->setIsPermaLink($isPermaLink);
+        $this->setPermaLink($isPermaLink);
     }
 
     /**
@@ -63,7 +63,7 @@ class FeedItemGuid
      *
      * @return FeedItemGuid
      */
-    public function setIsPermaLink($isPermaLink)
+    public function setPermaLink($isPermaLink)
     {
         $this->isPermaLink = $isPermaLink;
 
@@ -75,7 +75,7 @@ class FeedItemGuid
      *
      * @return boolean
      */
-    public function getIsPermaLink()
+    public function isPermaLink()
     {
         return $this->isPermaLink;
     }

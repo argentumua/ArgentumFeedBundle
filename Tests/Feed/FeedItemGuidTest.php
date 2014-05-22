@@ -28,7 +28,7 @@ class FeedItemGuidTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf(self::CLASS_NAME, $this->guid);
         $this->assertEquals('http://example.com/article', $this->guid->getLink());
-        $this->assertTrue($this->guid->getIsPermaLink());
+        $this->assertTrue($this->guid->isPermaLink());
     }
 
     public function testLink()
@@ -45,9 +45,9 @@ class FeedItemGuidTest extends \PHPUnit_Framework_TestCase
         $this->guid->setLink(null);
     }
 
-    public function testIsPermaLink()
+    public function testPermaLink()
     {
-        $this->guid->setIsPermaLink(false);
-        $this->assertFalse($this->guid->getIsPermaLink());
+        $this->guid->setPermaLink(false);
+        $this->assertFalse($this->guid->isPermaLink());
     }
 }

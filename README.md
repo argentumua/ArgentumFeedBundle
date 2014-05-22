@@ -1,6 +1,12 @@
 ArgentumFeedBundle
 ==================
 
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/020f9643-8b15-4542-9f19-7e8fdc86d392/mini.png)](https://insight.sensiolabs.com/projects/020f9643-8b15-4542-9f19-7e8fdc86d392)
+[![Build Status](https://travis-ci.org/argentumua/ArgentumFeedBundle.svg?branch=master)](https://travis-ci.org/argentumua/ArgentumFeedBundle)
+[![Latest Stable Version](https://poser.pugx.org/argentum/feed-bundle/v/stable.svg)](https://packagist.org/packages/argentum/feed-bundle)
+[![Latest Unstable Version](https://poser.pugx.org/argentum/feed-bundle/v/unstable.svg)](https://packagist.org/packages/argentum/feed-bundle)
+[![License](https://poser.pugx.org/argentum/feed-bundle/license.svg)](https://packagist.org/packages/argentum/feed-bundle)
+
 ArgentumFeedBundle allows you to create a set of feeds for your content with
 different settings. All predefined settings can be overridden at runtime.
 
