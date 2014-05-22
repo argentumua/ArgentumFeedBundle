@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="{{ feed.encoding }}"?>
+<rss version="2.0"{% for prefix, uri in feed.namespaces %} xmlns{{ prefix and prefix != 'default' ? ':' ~ prefix : '' }}="{{ uri }}"{% endfor %}>
+    <channel>
+        <title><![CDATA[{{ feed.title|trans({}, feed.translationDomain)|raw }}]]></title>
+        <link>{{ feed.link[0:4] == 'http' ? feed.link : app.request.uriForPath(feed.link) }}</link>
+        <description><![CDATA[{{ feed.description|trans({}, feed.translationDomain)|raw }}]]></description>
+{% if feed.language %}
+        <language>{{ feed.language }}</language>
+{% endif %}
+{% if feed.copyright %}
+        <copyright>{{ feed.copyright|trans({}, feed.translationDomain) }}</copyright>
+{% endif %}
+{% if feed.managingEditor %}
+        <managingEditor>{{ feed.managingEditor|trans({}, feed.translationDomain) }}</managingEditor>
+{% endif %}
+{% if feed.webMaster %}
+        <webMaster>{{ feed.webMaster|trans({}, feed.translationDomain) }}</webMaster>
+{% endif %}
+{% if feed.pubDate %}
+        <pubDate>{{ feed.pubDate|date(dateFormat) }}</pubDate>
+{% endif %}
+{% if feed.lastBuildDate %}
+        <lastBuildDate>{{ feed.lastBuildDate|date(dateFormat) }}</lastBuildDate>
+{% endif %}
+{% for category in feed.categories %}
+        <category{% if category.domain %} domain="{{ category.domain }}"{% endif %}><![CDATA[{{ category.title|trans({}, feed.translationDomain)|raw }}]]></category>
+{% endfor %}
+{% if feed.generator %}
+        <generator>{{ feed.generator|trans({}, feed.translationDomain) }}</generator>
+{% endif %}
+{% if feed.docs %}
+        <docs>{{ feed.docs|trans({}, feed.translationDomain) }}</docs>
+{% endif %}
+{% if feed.cloud %}
+        <cloud domain="{{ feed.cloud.domain }}" port="{{ feed.cloud.port }}" path="{{ feed.cloud.path }}" registerProcedure="{{ feed.cloud.registerProcedure }}" protocol="{{ feed.cloud.protocol }}" />
+{% endif %}
+{% if feed.ttl %}
+        <ttl>{{ feed.ttl }}</ttl>
+{% endif %}
+{% if feed.image %}
+        <image>
+            <url>{{ feed.image.url[0:4] == 'http' ? feed.image.url : app.request.uriForPath(feed.image.url) }}</url>
+            <title><![CDATA[{{ feed.image.title|trans({}, feed.translationDomain)|raw }}]]></title>
+            <link>{{ feed.image.link[0:4] == 'http' ? feed.image.link : app.request.uriForPath(feed.image.link) }}</link>
+{% if feed.image.width %}
+            <width>{{ feed.image.width }}</width>
+{% endif %}
+{% if feed.image.height %}
+            <height>{{ feed.image.height }}</height>
+{% endif %}
+{% if feed.image.description %}
+            <description><![CDATA[{{ feed.image.description|trans({}, feed.translationDomain)|raw }}]]></description>
+{% endif %}
+        </image>
+{% endif %}
+{% if feed.rating %}
+        <rating>{{ feed.rating|trans({}, feed.translationDomain) }}</rating>
+{% endif %}
+{% if feed.textInput %}
+        <textInput>
+            <title><![CDATA[{{ feed.textInput.title|trans({}, feed.translationDomain)|raw }}]]></title>
+            <description><![CDATA[{{ feed.textInput.description|trans({}, feed.translationDomain)|raw }}]]></description>
+            <name><![CDATA[{{ feed.textInput.name|raw }}]]></name>
+            <link>{{ feed.textInput.link }}</link>
+        </textInput>
+{% endif %}
+{% if feed.skipHours %}
+        <skipHours>
+{% for hour in feed.skipHours %}
+            <hour>{{ hour }}</hour>
+{% endfor %}
+        </skipHours>
+{% endif %}
+{% if feed.skipDays %}
+        <skipDays>
+{% for day in feed.skipDays %}
+            <day>{{ day }}</day>
+{% endfor %}
+        </skipDays>
+{% endif %}
+{% for key, value in feed.channel %}
+        <{{ key }}>{{ value }}</{{ key }}>
+{% endfor %}
+
+{% for item in feed.items %}
+        <item>
+            <title><![CDATA[{{ item.title|raw }}]]></title>
+            <link>{{ item.link ? (item.link[0:4] == 'http' ? item.link : app.request.uriForPath(item.link)) : url(item.routeName, item.routeParameters) }}</link>
+            <description><![CDATA[{{ item.description|raw }}]]></description>
+{% if item.author %}
+            <author><![CDATA[{{ item.author|raw }}]]></author>
+{% endif %}
+{% for category in item.categories %}
+            <category{% if category.domain %} domain="{{ category.domain }}"{% endif %}><![CDATA[{{ category.title|raw }}]]></category>
+{% endfor %}
+{% if item.comments %}
+            <comments>{{ item.comments[0:4] == 'http' ? item.comments : app.request.uriForPath(item.comments) }}</comments>
+{% endif %}
+{% for enclosure in item.enclosures %}
+            <enclosure url="{{ enclosure.url[0:4] == 'http' ? enclosure.url : app.request.uriForPath(enclosure.url) }}"{% if enclosure.length %} length="{{ enclosure.length }}"{% endif %} type="{{ enclosure.type }}" />
+{% endfor %}
+{% if item.guid %}
+            <guid isPermaLink="{{ item.guid.isPermaLink ? 'true' : 'false' }}">{{ item.guid.link }}</guid>
+{% endif %}
+{% if item.pubDate %}
+            <pubDate>{{ item.pubDate|date(dateFormat) }}</pubDate>
+{% endif %}
+{% if item.source %}
+            <source{% if item.source.url %} url="{{ item.source.url[0:4] == 'http' ? item.source.url : app.request.uriForPath(item.source.url) }}{% endif %}">{{ item.source.title }}</source>
+{% endif %}
+{% for customElement in feed.customElements if item.customValues[customElement] %}
+            <{{ customElement }}><![CDATA[{{ item.customValues[customElement]|raw }}]]></{{ customElement }}>
+{% endfor %}
+        </item>
+{% endfor %}
+    </channel>
+</rss>

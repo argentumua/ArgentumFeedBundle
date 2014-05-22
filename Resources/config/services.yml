@@ -1,0 +1,22 @@
+parameters:
+    argentum_feed.factory.class: Argentum\FeedBundle\Factory\FeedFactory
+    argentum_feed.feed.feed.class: Argentum\FeedBundle\Feed\Feed
+    argentum_feed.renderer.rss.class: Argentum\FeedBundle\Renderer\RssRenderer
+
+services:
+    argentum_feed.factory:
+        class: %argentum_feed.factory.class%
+        arguments:
+            - @service_container
+
+    argentum_feed.feed.feed:
+        class: %argentum_feed.feed.feed.class%
+        tags:
+            - { name: argentum_feed.feed, alias: feed }
+
+    argentum_feed.renderer.rss:
+        class: %argentum_feed.renderer.rss.class%
+        arguments:
+            - @templating
+        tags:
+            - { name: argentum_feed.renderer, alias: rss }
