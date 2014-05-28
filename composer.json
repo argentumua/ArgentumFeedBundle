@@ -17,6 +17,9 @@
         "symfony/framework-bundle": ">=2.1",
         "twig/twig": ">=1.10"
     },
+    "require-dev": {
+        "satooshi/php-coveralls": "dev-master"
+    },
     "autoload": {
         "psr-0": { "Argentum\\FeedBundle": "" }
     },
