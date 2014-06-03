@@ -66,10 +66,8 @@ class Feed implements FeedInterface
 
     /**
      * Constructor.
-     *
-     * @param array $channel
      */
-    public function __construct($channel = array())
+    public function __construct()
     {
         $this->encoding = 'utf-8';
         $this->categories = array();
@@ -323,7 +321,7 @@ class Feed implements FeedInterface
     /**
      * Sets categories.
      *
-     * @param FeedItemCategory[]|array $categories
+     * @param FeedItemCategory[] $categories
      *
      * @return Feed
      */
@@ -706,7 +704,7 @@ class Feed implements FeedInterface
     /**
      * Sets custom item elements.
      *
-     * @param array $customElements
+     * @param string[] $customElements
      *
      * @return Feed
      */
@@ -724,7 +722,7 @@ class Feed implements FeedInterface
     /**
      * Returns custom item elements.
      *
-     * @return array
+     * @return string[]
      */
     public function getCustomElements()
     {
@@ -892,7 +890,7 @@ class Feed implements FeedInterface
     /**
      * Adds feedable items.
      *
-     * @param array $items A collection of feedable items
+     * @param Feedable[] $items A collection of feedable items
      *
      * @return Feed
      *

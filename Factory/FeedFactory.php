@@ -160,8 +160,6 @@ class FeedFactory implements ContainerAwareInterface
      */
     protected function fetchProviderItems($parameters)
     {
-        $provider = null;
-
         if (isset($parameters['repository'])) {
             $provider = $this->container
                 ->get('doctrine.orm.default_entity_manager')

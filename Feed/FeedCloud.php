@@ -111,7 +111,7 @@ class FeedCloud
     /**
      * Returns port.
      *
-     * @return string
+     * @return integer
      */
     public function getPort()
     {
