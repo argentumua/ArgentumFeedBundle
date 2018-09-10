@@ -39,7 +39,7 @@ class RssRenderer implements RendererInterface
     {
         $parameters = array(
             'feed' => $feed,
-            'dateFormat' => \DateTime::RFC822,
+            'dateFormat' => \DateTime::RFC2822,
         );
 
         return $this->templating->render('ArgentumFeedBundle::rss.xml.twig', $parameters);

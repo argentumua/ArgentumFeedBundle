@@ -2,8 +2,8 @@
 
 namespace Argentum\FeedBundle\Factory;
 
-use Argentum\FeedBundle\Feed\Feedable;
 use Argentum\FeedBundle\Feed\FeedInterface;
+use Argentum\FeedBundle\Feed\FeedItem;
 use Argentum\FeedBundle\Renderer\RendererInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -39,7 +39,7 @@ class FeedFactory implements ContainerAwareInterface
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->feeds = array();
+        $this->feeds     = array();
         $this->renderers = array();
     }
 
@@ -56,7 +56,7 @@ class FeedFactory implements ContainerAwareInterface
     /**
      * Adds a new feed class.
      *
-     * @param string $name
+     * @param string        $name
      * @param FeedInterface $feed
      */
     public function addFeed($name, FeedInterface $feed)
@@ -85,7 +85,7 @@ class FeedFactory implements ContainerAwareInterface
     /**
      * Adds a new renderer class.
      *
-     * @param string $name
+     * @param string            $name
      * @param RendererInterface $renderer
      */
     public function addRenderer($name, RendererInterface $renderer)
@@ -114,12 +114,11 @@ class FeedFactory implements ContainerAwareInterface
     /**
      * Creates a new feed instance.
      *
-     * @param string $name A predefined channel name
+     * @param string $name         A predefined channel name
      * @param string $rendererName A registered renderer name
      *
-     * @return FeedInterface
-     *
      * @throws \InvalidArgumentException
+     * @return FeedInterface
      */
     public function createFeed($name, $rendererName = null)
     {
@@ -129,23 +128,22 @@ class FeedFactory implements ContainerAwareInterface
             throw new \InvalidArgumentException(sprintf('No such feed: %s', $name));
         }
 
-        $channel = $channels[$name];
+        $config   = $channels[$name];
+        $feedName = $config['feed'];
+        unset($config['feed']);
 
-        $feed = clone $this->getFeed($channel['feed']);
-        unset($channel['feed']);
+        $config['renderer'] = $this->getRenderer($rendererName ?: $config['renderer']);
 
-        $renderer = $this->getRenderer($rendererName ?: $channel['renderer']);
-        $feed->setRenderer($renderer);
-        unset($channel['renderer']);
-
-        if (isset($channel['provider'])) {
-            $feed->addFeedableItems($this->fetchProviderItems($channel['provider']));
-            unset($channel['provider']);
+        if (isset($config['provider'])) {
+            $config['items'] = $this->fetchProviderItems($config['provider']);
+            unset($config['provider']);
         }
 
-        $feed->setChannel($channel);
-
-        return $feed;
+        return $this->getFeed($feedName)->create($config);
+//
+//        $feed = clone $this->getFeed($feedName);
+//
+//        return $feed->loadFromArray($config);
     }
 
     /**
@@ -153,7 +151,7 @@ class FeedFactory implements ContainerAwareInterface
      *
      * @param array $parameters
      *
-     * @return Feedable[]
+     * @return array[]|object[]|FeedItem[]
      *
      * @throws \InvalidArgumentException
      * @throws \BadMethodCallException
@@ -163,7 +161,8 @@ class FeedFactory implements ContainerAwareInterface
         if (isset($parameters['repository'])) {
             $provider = $this->container
                 ->get('doctrine.orm.default_entity_manager')
-                ->getRepository($parameters['repository']);
+                ->getRepository($parameters['repository'])
+            ;
         } elseif (isset($parameters['service'])) {
             $provider = $this->container->get($parameters['service']);
         } else {
@@ -172,7 +171,7 @@ class FeedFactory implements ContainerAwareInterface
             );
         }
 
-        $method = $parameters['method'];
+        $method    = $parameters['method'];
         $arguments = isset($parameters['arguments']) ? $parameters['arguments'] : array();
 
         if (!method_exists($provider, $method)) {
@@ -181,6 +180,6 @@ class FeedFactory implements ContainerAwareInterface
             );
         }
 
-        return call_user_func_array(array($provider, $method), $arguments);
+        return call_user_func_array(array( $provider, $method ), $arguments);
     }
 }

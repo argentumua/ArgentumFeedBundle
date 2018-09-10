@@ -13,6 +13,20 @@ use Argentum\FeedBundle\Renderer\RendererInterface;
 interface FeedInterface
 {
     /**
+     * @param array $parameters
+     *
+     * @return FeedInterface
+     */
+    public function create(array $parameters);
+
+    /**
+     * @param array $parameters
+     *
+     * @return mixed
+     */
+    public function loadFromArray(array $parameters);
+
+    /**
      * Sets title.
      *
      * @param string $title
@@ -456,9 +470,16 @@ interface FeedInterface
     public function getChannel();
 
     /**
+     * @param array $config
+     *
+     * @return Feed
+     */
+//    public function create(array $config);
+
+    /**
      * Sets items.
      *
-     * @param FeedItem[] $items
+     * @param array[]|object[]|FeedItem[] $items
      *
      * @return FeedInterface
      */
@@ -472,24 +493,22 @@ interface FeedInterface
     public function getItems();
 
     /**
-     * Adds item.
+     * Sets items.
      *
-     * @param FeedItem $item
+     * @param array[]|object[]|FeedItem[] $items
      *
      * @return FeedInterface
      */
-    public function addItem(FeedItem $item);
+    public function addItems($items);
 
     /**
-     * Adds feedable items.
+     * Adds item.
      *
-     * @param Feedable[] $items A collection of feedable items
+     * @param array|object|FeedItem $item
      *
-     * @return Feed
-     *
-     * @throws \InvalidArgumentException
+     * @return FeedInterface
      */
-    public function addFeedableItems($items);
+    public function addItem($item);
 
     /**
      * Sets renderer.

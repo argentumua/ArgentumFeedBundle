@@ -2,7 +2,7 @@
 <rss version="2.0"{% for prefix, uri in feed.namespaces %} xmlns{{ prefix and prefix != 'default' ? ':' ~ prefix : '' }}="{{ uri }}"{% endfor %}>
     <channel>
         <title><![CDATA[{{ feed.title|trans({}, feed.translationDomain)|raw }}]]></title>
-        <link>{{ feed.link[0:4] == 'http' ? feed.link : app.request.uriForPath(feed.link) }}</link>
+        <link>{{ feed.routeName ? url(feed.routeName, feed.routeParameters) : feed.link[0:4] == 'http' ? feed.link : app.request.uriForPath(feed.link) }}</link>
         <description><![CDATA[{{ feed.description|trans({}, feed.translationDomain)|raw }}]]></description>
 {% if feed.language %}
         <language>{{ feed.language }}</language>
