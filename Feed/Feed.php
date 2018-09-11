@@ -3,6 +3,7 @@
 namespace Argentum\FeedBundle\Feed;
 
 use Argentum\FeedBundle\Renderer\RendererInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * Feed
@@ -64,6 +65,8 @@ class Feed implements FeedInterface
 
     protected $renderer;
 
+    use FeedRouteTrait;
+
     /**
      * Constructor.
      */
@@ -75,6 +78,53 @@ class Feed implements FeedInterface
         $this->namespaces = array();
         $this->customElements = array();
     }
+
+
+    /**
+     * @param array $parameters
+     *
+     * @return Feed
+     */
+    public function create(array $parameters)
+    {
+        $feed = clone $this;
+        return $feed->loadFromArray($parameters);
+    }
+
+    /**
+     * Applies
+     *
+     * May contain any custom elements.
+     *
+     * @param array $parameters
+     *
+     * @return Feed
+     */
+    public function loadFromArray(array $parameters)
+    {
+        if (isset($parameters['items'])) {
+            $items = $parameters['items'];
+            unset($parameters['items']);
+        }
+        $parameters['test'] = 'adsas';
+        $pa = PropertyAccess::createPropertyAccessor();
+
+        foreach ($parameters as $element => $value) {
+            if ($pa->isWritable($this, $element)) {
+                $pa->setValue($this, $element, $value);
+                unset($parameters[$element]);
+            }
+        }
+
+        $this->setChannel($parameters);
+
+        if (isset($items)) {
+            $this->setItems($items);
+        }
+
+        return $this;
+    }
+
 
     /**
      * Sets title.
@@ -821,15 +871,6 @@ class Feed implements FeedInterface
      */
     public function setChannel(array $channel)
     {
-        foreach ($channel as $element => $value) {
-            $setter = 'set' . ucfirst($element);
-
-            if (method_exists($this, $setter)) {
-                $this->$setter($value);
-                unset($channel[$element]);
-            }
-        }
-
         $this->channel = $channel;
 
         return $this;
@@ -848,17 +889,14 @@ class Feed implements FeedInterface
     /**
      * Sets items.
      *
-     * @param FeedItem[] $items
+     * @param array[]|object[]|FeedItem[] $items
      *
      * @return Feed
      */
     public function setItems($items)
     {
         $this->items = array();
-
-        foreach ($items as $item) {
-            $this->addItem($item);
-        }
+        $this->addItems($items);
 
         return $this;
     }
@@ -874,44 +912,60 @@ class Feed implements FeedInterface
     }
 
     /**
-     * Adds item.
+     * Sets items.
      *
-     * @param FeedItem $item
+     * @param array[]|object[]|FeedItem[] $items
      *
      * @return Feed
      */
-    public function addItem(FeedItem $item)
+    public function addItems($items)
     {
-        $this->items[] = $item;
+        if (is_iterable($items)) {
+            foreach ($items as $item) {
+                $this->addItem($item);
+            }
+        }
 
         return $this;
     }
 
     /**
-     * Adds feedable items.
+     * Adds item.
      *
-     * @param Feedable[] $items A collection of feedable items
+     * @param array|object|FeedItem $item
      *
      * @return Feed
-     *
-     * @throws \InvalidArgumentException
      */
-    public function addFeedableItems($items)
+    public function addItem($item)
     {
-        if (!is_array($items) && !($items instanceof \Traversable)) {
-            throw new \InvalidArgumentException('You should pass an array or a collection of Feedable items');
+        if ($item instanceof Feedable) {
+            $item = $item->getFeedItem($this);
         }
 
-        foreach ($items as $feedable) {
-            if (!$feedable instanceof Feedable) {
-                throw new \InvalidArgumentException('Feedable items should implement Feedable interface');
-            }
-
-            $this->addItem($feedable->getFeedItem());
+        if ($item instanceof FeedItem) {
+            $this->items[] = $item;
         }
 
         return $this;
     }
+
+
+//    /**
+//     * Adds item.
+//     *
+//     * @param array|object $parameters
+//     *
+//     * @return FeedItem|null
+//     */
+//    public function createFeedItem($parameters)
+//    {
+//        if ($parameters instanceof Feedable) {
+//            return $parameters->getFeedItem();
+//        }
+//
+//        return $parameters;
+//    }
+
 
     /**
      * Sets renderer.
