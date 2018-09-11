@@ -13,7 +13,9 @@ interface Feedable
     /**
      * Returns FeedItem instance.
      *
+     * @param FeedInterface $feed
+     *
      * @return FeedItem
      */
-    public function getFeedItem();
+    public function getFeedItem(FeedInterface $feed);
 }

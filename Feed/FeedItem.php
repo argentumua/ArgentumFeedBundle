@@ -36,13 +36,15 @@ class FeedItem
 
     protected $routeParameters;
 
+    use FeedRouteTrait;
+
     /**
      * Constructor.
      */
     public function __construct()
     {
-        $this->categories = array();
-        $this->enclosures = array();
+        $this->categories   = array();
+        $this->enclosures   = array();
         $this->customValues = array();
     }
 
@@ -127,11 +129,11 @@ class FeedItem
     /**
      * Sets author.
      *
-     * @param string $author
+     * @param FeedItemAuthor $author
      *
      * @return FeedItem
      */
-    public function setAuthor($author)
+    public function setAuthor(FeedItemAuthor $author = null)
     {
         $this->author = $author;
 
@@ -141,7 +143,7 @@ class FeedItem
     /**
      * Returns author.
      *
-     * @return string
+     * @return FeedItemAuthor
      */
     public function getAuthor()
     {
@@ -371,53 +373,5 @@ class FeedItem
         $this->customValues[$element] = $value;
 
         return $this;
-    }
-
-    /**
-     * Sets routeName.
-     *
-     * @param string $routeName
-     *
-     * @return FeedItem
-     */
-    public function setRouteName($routeName)
-    {
-        $this->routeName = $routeName;
-
-        return $this;
-    }
-
-    /**
-     * Returns routeName.
-     *
-     * @return string
-     */
-    public function getRouteName()
-    {
-        return $this->routeName;
-    }
-
-    /**
-     * Sets routeParameters.
-     *
-     * @param array $routeParameters
-     *
-     * @return FeedItem
-     */
-    public function setRouteParameters(array $routeParameters)
-    {
-        $this->routeParameters = $routeParameters;
-
-        return $this;
-    }
-
-    /**
-     * Returns routeParameters.
-     *
-     * @return mixed
-     */
-    public function getRouteParameters()
-    {
-        return $this->routeParameters;
     }
 }

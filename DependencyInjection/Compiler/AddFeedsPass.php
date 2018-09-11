@@ -31,6 +31,8 @@ class AddFeedsPass implements CompilerPassInterface
 
         $taggedFeeds = $container->findTaggedServiceIds('argentum_feed.feed');
         foreach ($taggedFeeds as $id => $tags) {
+            $feedDefinition = $container->getDefinition($id);
+//            $feedDefinition
             foreach ($tags as $attributes) {
                 if (empty($attributes['alias'])) {
                     throw new \InvalidArgumentException(
